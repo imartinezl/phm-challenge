@@ -1,30 +1,22 @@
 # %% SETUP
-
 import argparse
-from src.utils import Parameters, setup
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='GKN Grading Predictor')
+parser = argparse.ArgumentParser(description='GKN Grading Predictor')
 
-    parser.add_argument('--max-n-features', type=int, help='max-n-features', default=748)
-    parser.add_argument('--n-classes', type=int, help='n-classes', default=11)
-    parser.add_argument('--batch-size', type=int, help='batch size', default=32)
-    parser.add_argument('--test-size', type=float, help='test size', default=0.3)
-    parser.add_argument('--epochs', type=int, help='epochs', default=100)
-    parser.add_argument('--lr', type=float, help='batch size', default=0.001)
+parser.add_argument('--folder', type=str, help='folder', default="results")
+parser.add_argument('--max-n-features', type=int, help='max-n-features', default=748)
+parser.add_argument('--n-classes', type=int, help='n-classes', default=11)
+parser.add_argument('--batch-size', type=int, help='batch size', default=32)
+parser.add_argument('--test-size', type=float, help='test size', default=0.3)
+parser.add_argument('--epochs', type=int, help='epochs', default=100)
+parser.add_argument('--lr', type=float, help='batch size', default=0.001)
+parser.add_argument('--path', type=str, help='path', default=None)
+parser.add_argument('--train', type=bool, help='train/evaluate model', default=True)
 
-    args = Parameters(vars(parser.parse_args()))
+args = parser.parse_args()
 
-args = Parameters(
-    {
-        "max_n_features": 748,
-        "n_classes": 11,
-        "batch_size": 10,
-        "test_size": 0.3,
-        "epochs": 1,
-        "lr": 0.003,
-    }
-)
+# %% SETUP
+from src.utils import setup
 path = setup(args)
 
 # %% MODEL
@@ -45,10 +37,21 @@ from src.models import CustomModel
 
 model = CustomModel(cnn_params, fcn_params)
 
+# %%
+params = {
+    "in_channels": 3,
+    "out_classes": args.n_classes,
+    "channels": [128,128,128],
+    "kernels": [8,8,8],
+    "strides": [1,1,1]
+}
+
+from src.models2 import CustomModel
+
+model = CustomModel(params)
+
 # %% RUN
 
 from src.base import run_pipeline
 
-run_pipeline(model, path, **args.dictionary)
-
-# %%
+run_pipeline(model, path, args.max_n_features, args.batch_size, args.test_size, args.epochs, args.lr, args.n_classes, args.train)

@@ -299,6 +299,7 @@ def get_loader(
 def load_data(max_n_features=748, batch_size=32, test_size=0.3):
 
     folder_train = "data/training_data_reduced"
+    folder_train = "data/training_data"
     folder_test = "data/testing_data"
 
     resample = True

@@ -163,8 +163,8 @@ def preprocess_data(metadata, X, Y, normalize=True):
 # %%
 
 if __name__ == "__main__":
-    folder = "training_data_reduced"
+    folder = "../data/training_data_reduced"
     max_n_features = 748
     resample = True
-    normalize = True
-    metadata, X, Y = read_folder(folder, max_n_features, resample, normalize)
+    metadata, X, Y = read_folder(folder, max_n_features, resample)
+    print(X.shape, Y.shape, metadata)

@@ -56,8 +56,8 @@ def evaluate(model, data_loader, loss_func, device, log=False):
 
         loss += loss_func(y_dat, z_dat).item()
 
-        y_true.append(y_dat.numpy())
-        y_pred.append(z_dat.numpy())
+        y_true.append(y_dat.cpu().numpy())
+        y_pred.append(z_dat.cpu().numpy())
 
     y_true, y_pred = np.concatenate(y_true), np.concatenate(y_pred)
 
@@ -86,8 +86,8 @@ def predict(model, data_loader, device):
 
         z_dat = model(x_dat, x_ref)
 
-        y_true.append(y_dat.argmax(dim=-1).numpy() + 1)
-        y_pred.append(z_dat.argmax(dim=-1).numpy() + 1)
+        y_true.append(y_dat.argmax(dim=-1).cpu().numpy() + 1)
+        y_pred.append(z_dat.argmax(dim=-1).cpu().numpy() + 1)
 
     y_true, y_pred = np.concatenate(y_true), np.concatenate(y_pred)
 
@@ -183,7 +183,7 @@ from matplotlib.colors import LogNorm
 
 
 def plot_confusion_matrix(y_true, y_pred, path, n_classes=11):
-    bins = range(n_classes + 1)
+    bins = range(1, n_classes + 2)
     H, xedges, yedges = np.histogram2d(y_pred, y_true, bins=[bins, bins])
 
     plt.figure(figsize=(6, 6))
@@ -214,7 +214,7 @@ from src.dataset import load_data
 
 
 def run_pipeline(
-    model, path, max_n_features, batch_size, test_size, epochs, lr, n_classes
+    model, path, max_n_features, batch_size, test_size, epochs, lr, n_classes, train
 ):
     # RANDOM STATE
     seed = 0
@@ -232,13 +232,14 @@ def run_pipeline(
     loss_func = torch.nn.CrossEntropyLoss(reduction="mean")
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
 
-    # TRAINING
-    model, train_results, test_results = train_and_evaluate(
-        model, epochs, optimizer, loss_func, train_loader, test_loader, device, path
-    )
+    if train:
+        # TRAINING
+        model, train_results, test_results = train_and_evaluate(
+            model, epochs, optimizer, loss_func, train_loader, test_loader, device, path
+        )
 
-    # PLOT TRAINING
-    plot_results(train_results, test_results, path)
+        # PLOT TRAINING
+        plot_results(train_results, test_results, path)
 
     # LOAD BEST MODEL
     model = load_best_model(model, path)
@@ -256,3 +257,4 @@ def run_pipeline(
     save_submission(model, validation_loader, device, path)
 
     return True
+

@@ -9,7 +9,7 @@ from pathlib import Path
 # %%
 
 
-def print_args(args):
+def print_command():
     print("python " + " ".join(sys.argv))
 
 
@@ -17,8 +17,10 @@ def now():
     return round(time.time() * 1000)
 
 
-def get_path(folder="results"):
-    return os.path.join(folder, str(now()))
+def get_path(args):
+    if args is None:
+        return os.path.join(args.folder, str(now()))
+    return os.path.join(args.folder, args.path)
 
 
 def mkdir(path):
@@ -26,17 +28,21 @@ def mkdir(path):
 
 
 def save_args(args, path, name="config"):
-    with open(os.path.join(path, name + ".json"), "w") as fp:
-        json.dump(args.dictionary, fp)
+    filename = os.path.join(path, name + ".json")
+    if os.path.isfile(filename):
+        return
+    with open(filename, "w") as fp:
+        json.dump(vars(args), fp)
 
 
 def setup(args):
-    print_args(args)
-    path = get_path()
+    print_command()
+    path = get_path(args)
     mkdir(path)
     save_args(args, path)
     return path
 
+# %%
 
 class Parameters:
     def __init__(self, dictionary):
