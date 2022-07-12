@@ -15,15 +15,7 @@ train = [True]
 from itertools import product
 
 hyperparameters = product(
-    folder,
-    max_n_features,
-    n_classes,
-    batch_size,
-    test_size,
-    epochs,
-    lr,
-    path,
-    train
+    folder, max_n_features, n_classes, batch_size, test_size, epochs, lr, path, train
 )
 
 directory = "runs"
@@ -49,4 +41,4 @@ python main.py  \
     f.write("\n")
     f.close()
 
-print("Prepared {} experiments".format(k+1))
+print("Prepared {} experiments".format(k + 1))

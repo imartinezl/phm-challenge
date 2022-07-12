@@ -20,6 +20,6 @@ source activate .venv2
 
 # pip3 install torch==1.8.2 torchvision==0.9.2 torchaudio==0.8.2 --extra-index-url https://download.pytorch.org/whl/lts/1.8/cu111
 
-srun bash run.sh
+srun python run.py
 
 # srun python main.py --folder results --batch-size 64 --rnn-num-layers 8 --rnn-hidden-size 64 --fcn-hidden-layers 4 --fcn-hidden-size 64  --embedding-size 10 --split 0.7 --epochs 1 --lr 0.0001

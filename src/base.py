@@ -20,7 +20,6 @@ def train(model, train_loader, optimizer, loss_func, device):
     model.train()
 
     for x_dat, x_ref, y_dat, y_ref, individual in train_loader:
-
         optimizer.zero_grad(set_to_none=True)
 
         x_dat = x_dat.to(device)
@@ -28,16 +27,19 @@ def train(model, train_loader, optimizer, loss_func, device):
         y_dat = y_dat.to(device)
         y_ref = y_ref.to(device)
 
-        z_dat = model(x_dat, x_ref)
+        z_dat, x_dat_aligned, x_ref_aligned = model(x_dat, x_ref)
         z_dat = torch.softmax(z_dat, -1)
 
-        loss = loss_func(y_dat, z_dat)
+        loss = loss_func(z_dat, y_dat, x_dat_aligned, x_ref_aligned, individual)
         loss.backward()
         optimizer.step()
 
     return model
 
+
 from sklearn.metrics import roc_auc_score, accuracy_score
+
+
 @torch.no_grad()
 def evaluate(model, data_loader, loss_func, device, log=False):
     model.eval()
@@ -51,10 +53,10 @@ def evaluate(model, data_loader, loss_func, device, log=False):
         y_dat = y_dat.to(device)
         y_ref = y_ref.to(device)
 
-        z_dat = model(x_dat, x_ref)
+        z_dat, x_dat_aligned, x_ref_aligned = model(x_dat, x_ref)
         z_dat = torch.softmax(z_dat, -1)
 
-        loss += loss_func(y_dat, z_dat).item()
+        loss += loss_func(z_dat, y_dat, x_dat_aligned, x_ref_aligned, individual).item()
 
         y_true.append(y_dat.cpu().numpy())
         y_pred.append(z_dat.cpu().numpy())
@@ -84,7 +86,7 @@ def predict(model, data_loader, device):
         y_dat = y_dat.to(device)
         y_ref = y_ref.to(device)
 
-        z_dat = model(x_dat, x_ref)
+        z_dat, x_dat_aligned, x_ref_aligned = model(x_dat, x_ref)
 
         y_true.append(y_dat.argmax(dim=-1).cpu().numpy() + 1)
         y_pred.append(z_dat.argmax(dim=-1).cpu().numpy() + 1)
@@ -210,6 +212,32 @@ def plot_confusion_matrix(y_true, y_pred, path, n_classes=11):
 
 # %%
 
+def alignment_loss(x_aligned, labels):
+    loss = 0
+    classes = labels.unique()
+    for c in classes:
+        loss += x_aligned[labels == c].var(dim=0, unbiased=False).mean(dim=1).mean()
+    loss /= len(classes)
+    return loss
+
+def custom_loss(z_dat, y_dat, x_dat_aligned=None, x_ref_aligned=None, individual=None):
+    w1, w2, w3 = 1, 1, 1
+        
+    # L1) alignment loss per individual: x_dat_aligned
+    L1 = 0 if x_ref_aligned is None else alignment_loss(x_ref_aligned, individual)
+
+    # L2) alignment loss per individual: x_ref_aligned
+    L2 = 0 if x_dat_aligned is None else alignment_loss(x_dat_aligned, individual)
+
+    # L3) classification loss:
+    L3 = torch.nn.CrossEntropyLoss(reduction="mean")(z_dat, y_dat)
+
+    loss = w1 * L1 + w2 * L2 + w3 * L3
+    return loss
+
+
+# %%
+
 from src.dataset import load_data
 
 
@@ -229,7 +257,8 @@ def run_pipeline(
     # SETUP
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     model = model.to(device)
-    loss_func = torch.nn.CrossEntropyLoss(reduction="mean")
+    # loss_func = torch.nn.CrossEntropyLoss(reduction="mean")
+    loss_func = custom_loss
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
 
     if train:
@@ -257,4 +286,3 @@ def run_pipeline(
     save_submission(model, validation_loader, device, path)
 
     return True
-

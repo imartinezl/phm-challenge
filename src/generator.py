@@ -57,7 +57,7 @@ def read_file(folder, filename, max_n_features=None, resample=True):
 def read_folder(folder, max_n_features=None, resample=True):
     metadata, X, Y = [], [], []
     for filename in os.listdir(folder):
-        # print("LOADED", filename)
+        print("LOADED", filename)
         metadata_, X_, Y_ = read_file(folder, filename, max_n_features, resample)
         metadata.append(metadata_)
         X.append(X_)

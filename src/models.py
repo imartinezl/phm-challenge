@@ -125,6 +125,7 @@ class CNN(nn.Module):
 
 # %%
 
+
 class CustomModel(nn.Module):
     def __init__(self, cnn_params, fcn_params):
 
@@ -150,6 +151,7 @@ class CustomModel(nn.Module):
 
 # %%
 
+
 class BaselineModel(nn.Module):
     def __init__(self):
 
@@ -163,4 +165,3 @@ class BaselineModel(nn.Module):
 
 
 # %%
-
