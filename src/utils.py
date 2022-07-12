@@ -18,7 +18,7 @@ def now():
 
 
 def get_path(args):
-    if args is None:
+    if args.path is None:
         return os.path.join(args.folder, str(now()))
     return os.path.join(args.folder, args.path)
 

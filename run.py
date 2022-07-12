@@ -8,8 +8,8 @@ parser.add_argument('--max-n-features', type=int, help='max-n-features', default
 parser.add_argument('--n-classes', type=int, help='n-classes', default=11)
 parser.add_argument('--batch-size', type=int, help='batch size', default=32)
 parser.add_argument('--test-size', type=float, help='test size', default=0.3)
-parser.add_argument('--epochs', type=int, help='epochs', default=100)
-parser.add_argument('--lr', type=float, help='batch size', default=0.001)
+parser.add_argument('--epochs', type=int, help='epochs', default=200)
+parser.add_argument('--lr', type=float, help='batch size', default=0.0001)
 parser.add_argument('--path', type=str, help='path', default=None)
 parser.add_argument('--train', type=bool, help='train/evaluate model', default=True)
 
