@@ -17,8 +17,10 @@ module load Miniconda3/4.9.2
 # fi
 module load CUDA/11.1.1-GCC-10.2.0
 source activate .venv2
+# pip install -r requirements.txt
 
 # pip3 install torch==1.8.2 torchvision==0.9.2 torchaudio==0.8.2 --extra-index-url https://download.pytorch.org/whl/lts/1.8/cu111
+# pip3 install difw
 
 srun python run.py
 
