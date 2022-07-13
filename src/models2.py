@@ -394,3 +394,17 @@ class CustomModelAlign(nn.Module):
 
 
 # %%
+
+
+class BaselineModel(nn.Module):
+    def __init__(self, params):
+
+        super(BaselineModel, self).__init__()
+
+        self.mlp = MLP(**params)
+
+    def forward(self, x_dat, x_ref):
+        
+        x_input = x_dat
+        y = self.mlp(torch.swapaxes(x_input, 2, 1)).mean(dim=1)
+        return y, None, None

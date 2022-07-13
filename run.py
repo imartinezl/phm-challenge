@@ -20,25 +20,25 @@ args = parser.parse_args()
 from src.utils import setup
 path = setup(args)
 
-# %% MODEL
+# %% MODEL 1
 
-# cnn_params = {
-#     "n_channels": 3,
-#     "n_features": args.max_n_features,
-#     "dropout": None,
-# }
-# fcn_params = {
-#     "hidden_size": 10,
-#     "hidden_layers": 2,
-#     "dropout": None,
-#     "output_size": args.n_classes,
-# }
+cnn_params = {
+    "n_channels": 3,
+    "n_features": args.max_n_features,
+    "dropout": None,
+}
+fcn_params = {
+    "hidden_size": 10,
+    "hidden_layers": 2,
+    "dropout": None,
+    "output_size": args.n_classes,
+}
 
-# from src.models import CustomModel
+from src.models import CustomModel
 
 # model = CustomModel(cnn_params, fcn_params)
 
-# %%
+# %% MODEL 2
 params = {
     "in_channels": 3,
     "out_channels": args.n_classes,
@@ -49,9 +49,9 @@ params = {
 
 from src.models2 import CustomModel
 
-model = CustomModel(params)
+# model = CustomModel(params)
 
-# %%
+# %% MODEL 3
 params_alignment_ref = {
     "tess_size": 100,
     "zero_boundary": True,
@@ -87,7 +87,21 @@ params_classification = {
 
 from src.models2 import CustomModelAlign
 
-model = CustomModelAlign(params_alignment_ref, params_alignment_dat, params_classification)
+# model = CustomModelAlign(params_alignment_ref, params_alignment_dat, params_classification)
+
+# %% MODEL BASELINE
+
+from src.models2 import BaselineModel
+
+params = {
+    "input_size": args.max_n_features,
+    "hidden_size": 10,
+    "hidden_layers": 0,
+    "dropout": None,
+    "output_size": args.n_classes,
+}
+model = BaselineModel(params)
+
 
 # %% RUN
 
