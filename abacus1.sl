@@ -9,7 +9,7 @@
 #SBATCH --nodelist=abacus001
 #SBATCH --cpus-per-task=8
 
-# salloc --ntasks=1 --partition=interactive --time=60  --mem=4GB --gpus=1 --nodelist=abacus001 --cpus-per-task=8
+# salloc --ntasks=1 --partition=interactive --time=10:00:00  --mem=4GB --gpus=1 --nodelist=abacus001 --cpus-per-task=8
 
 module load Miniconda3/4.9.2
 # if ! (conda env list | grep ".venv2") ; then 

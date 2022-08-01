@@ -8,7 +8,7 @@
 #SBATCH --gres=gpu:1
 #SBATCH --nodelist=abacus002
 #SBATCH --cpus-per-task=8
-#SBATCH --array=1-384
+#SBATCH --array=1-36
 
 # salloc --ntasks=1 --partition=interactive --time=1-00:00:00  --mem=12GB --gpus=1 --nodelist=abacus002 --cpus-per-task=8
 
@@ -18,6 +18,7 @@ module load Miniconda3/4.9.2
 # fi
 module load CUDA/11.1.1-GCC-10.2.0
 source activate .venv2
+export CXX=g++
 
 # pip3 install torch==1.8.2 torchvision==0.9.2 torchaudio==0.8.2 --extra-index-url https://download.pytorch.org/whl/lts/1.8/cu111
 
