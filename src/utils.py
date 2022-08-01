@@ -14,7 +14,7 @@ def print_command():
 
 
 def now():
-    return round(time.time() * 1000)
+    return round(time.time() * 1e7)
 
 
 def get_path(args):
