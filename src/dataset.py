@@ -298,9 +298,8 @@ def get_loader(
 
 def load_data(max_n_features=748, batch_size=32, test_size=0.3):
 
-    folder_train = "data/training_data_reduced"
     folder_train = "data/training_data"
-    folder_test = "data/testing_data"
+    folder_validation = "data/validation_data"
 
     resample = True
     normalize = True
@@ -317,7 +316,7 @@ def load_data(max_n_features=748, batch_size=32, test_size=0.3):
     }
 
     validation_loader_params = {
-        "folder": folder_test,
+        "folder": folder_validation,
         "max_n_features": max_n_features,
         "resample": resample,
         "normalize": normalize,
@@ -330,5 +329,57 @@ def load_data(max_n_features=748, batch_size=32, test_size=0.3):
     train_loader, test_loader = get_loader(**train_loader_params)
     validation_loader = get_loader(**validation_loader_params)
     # train_loader.dataset.plot()
+
+    return train_loader, test_loader, validation_loader
+
+
+# %%
+
+
+def load_data_extended(max_n_features=748, batch_size=32):
+
+    folder_train = "data/training_data"
+    folder_test = "data/testing_data"
+    folder_validation = "data/validation_data"
+
+    resample = True
+    normalize = True
+
+    train_loader_params = {
+        "folder": folder_train,
+        "max_n_features": max_n_features,
+        "resample": resample,
+        "normalize": normalize,
+        "test_size": None,
+        "shuffle_split": None,
+        "shuffle_sample": True,
+        "batch_size": batch_size,
+    }
+
+    test_loader_params = {
+        "folder": folder_test,
+        "max_n_features": max_n_features,
+        "resample": resample,
+        "normalize": normalize,
+        "test_size": None,
+        "shuffle_split": None,
+        "shuffle_sample": False,
+        "batch_size": batch_size,
+    }
+
+    validation_loader_params = {
+        "folder": folder_validation,
+        "max_n_features": max_n_features,
+        "resample": resample,
+        "normalize": normalize,
+        "test_size": None,
+        "shuffle_split": None,
+        "shuffle_sample": False,  # ALWAYS FALSE
+        "batch_size": batch_size,
+    }
+
+    train_loader = get_loader(**train_loader_params)
+    test_loader = get_loader(**test_loader_params)
+    validation_loader = get_loader(**validation_loader_params)
 
     return train_loader, test_loader, validation_loader
