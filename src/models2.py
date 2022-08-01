@@ -300,7 +300,22 @@ class CustomModel(nn.Module):
     def forward(self, x_dat, x_ref):
         x_input = x_dat
         y = self.fcn(torch.swapaxes(x_input, 2, 1))
-        return y, None, None
+        return y, x_dat, x_ref
+        # return y, None, None
+
+
+class CustomModelRef(nn.Module):
+    def __init__(self, params):
+
+        super(CustomModelRef, self).__init__()
+        self.fcn = FCNBaseline(**params)
+
+    def forward(self, x_dat, x_ref):
+        x_input = x_dat
+        x_input = torch.cat([x_dat, x_ref.mean(dim=1)], dim=2)
+        y = self.fcn(torch.swapaxes(x_input, 2, 1))
+        return y, x_dat, x_ref
+        # return y, None, None
 
 
 # %%
@@ -334,9 +349,7 @@ class CPABAverage(nn.Module):
         )
 
         self.fc_loc = nn.Sequential(
-            nn.Linear(out_channels, 16),
-            nn.ReLU(True),
-            nn.Linear(16, self.T.params.d)
+            nn.Linear(out_channels, 16), nn.ReLU(True), nn.Linear(16, self.T.params.d)
         )
         self.fc_loc[2].weight.data.zero_()
         self.fc_loc[2].bias.data.zero_()
@@ -396,6 +409,42 @@ class CustomModelAlign(nn.Module):
 # %%
 
 
+class CustomModelAlignMLP(nn.Module):
+    def __init__(
+        self,
+        params_alignment_ref,
+        params_alignment_dat,
+        params_classification,
+    ):
+
+        super(CustomModelAlignMLP, self).__init__()
+
+        self.align_ref = CPABAverage(**params_alignment_ref)
+        self.align_dat = CPABAverage(**params_alignment_dat)
+        self.mlp = MLP(**params_classification)
+
+    def forward(self, x_dat, x_ref):
+        # AVERAGE XREF
+        x_ref_align, thetas_ref = [], []
+        for x_ref_i in x_ref:
+            x_ref_i_align, thetas_ref_i = self.align_ref(x_ref_i)
+            x_ref_align.append(x_ref_i_align)
+            thetas_ref.append(thetas_ref_i)
+        x_ref_align = torch.stack(x_ref_align)
+        x_ref_avg = torch.mean(x_ref_align, dim=1)
+
+        # ALIGN XDAT
+        # x_dat_align, thetas_dat = self.align_dat(x_dat)
+        x_dat_align, thetas_dat = self.align_dat(x_dat, x_ref_avg)
+
+        x_input = torch.cat([x_dat_align, x_ref_avg], dim=2)
+        y = self.mlp(torch.swapaxes(x_input, 2, 1))
+        return y, x_dat_align, x_ref_align
+
+
+# %%
+
+
 class BaselineModel(nn.Module):
     def __init__(self, params):
 
@@ -404,7 +453,8 @@ class BaselineModel(nn.Module):
         self.mlp = MLP(**params)
 
     def forward(self, x_dat, x_ref):
-        
+
         x_input = x_dat
         y = self.mlp(torch.swapaxes(x_input, 2, 1)).mean(dim=1)
-        return y, None, None
+        return y, x_dat, x_ref
+        # return y, None, None
