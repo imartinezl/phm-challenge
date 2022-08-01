@@ -56,7 +56,7 @@ def read_file(folder, filename, max_n_features=None, resample=True):
 
 def read_folder(folder, max_n_features=None, resample=True):
     metadata, X, Y = [], [], []
-    for filename in os.listdir(folder):
+    for filename in sorted(os.listdir(folder), key=lambda s: s[-5]):
         print("LOADED", filename)
         metadata_, X_, Y_ = read_file(folder, filename, max_n_features, resample)
         metadata.append(metadata_)
@@ -162,9 +162,9 @@ def preprocess_data(metadata, X, Y, normalize=True):
 
 # %%
 
-if __name__ == "__main__":
-    folder = "../data/training_data_reduced"
-    max_n_features = 748
-    resample = True
-    metadata, X, Y = read_folder(folder, max_n_features, resample)
-    print(X.shape, Y.shape, metadata)
+# from generator import read_folder
+# folder = "../data/training_data"
+# max_n_features = 748
+# resample = True
+# metadata, X, Y = read_folder(folder, max_n_features, resample)
+# print(X.shape, Y.shape, metadata)
