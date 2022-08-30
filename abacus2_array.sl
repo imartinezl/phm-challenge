@@ -8,7 +8,7 @@
 #SBATCH --gres=gpu:1
 #SBATCH --nodelist=abacus002
 #SBATCH --cpus-per-task=8
-#SBATCH --array=1-36
+#SBATCH --array=1-96
 
 # salloc --ntasks=1 --partition=interactive --time=1-00:00:00  --mem=12GB --gpus=1 --nodelist=abacus002 --cpus-per-task=8
 

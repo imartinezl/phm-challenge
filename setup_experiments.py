@@ -16,6 +16,19 @@ cost_classification = [1]
 cost_align_ref = [1, 10, 100]
 cost_align_dat = [1, 10, 100]
 
+folder = ["results_validation"]
+max_n_features = [748]
+n_classes = [11]
+batch_size = [64]
+test_size = [0.7]
+epochs = [75]
+lr = [8e-5]
+train = [True]
+model = ["CustomModel", "CustomModelRef", "CustomModelAlign"]
+cost_classification = [1, 10]
+cost_align_ref = [1, 10, 50, 100]
+cost_align_dat = [1, 10, 50, 100]
+
 from itertools import product
 
 hyperparameters = product(
