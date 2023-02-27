@@ -298,8 +298,10 @@ def get_loader(
 
 def load_data(max_n_features=748, batch_size=32, test_size=0.3):
 
-    folder_train = "data/training_data"
+    folder_train = "data/training_data_reduced"
     folder_validation = "data/validation_data"
+    folder_train = "data/custom_training"
+    folder_validation = "data/custom_validation2"
 
     resample = True
     normalize = True

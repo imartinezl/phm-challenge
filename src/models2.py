@@ -339,7 +339,7 @@ class CPABAverage(nn.Module):
     ):
 
         super(CPABAverage, self).__init__()
-        self.T = difw.Cpab(tess_size, "pytorch", "gpu", zero_boundary, "svd")
+        self.T = difw.Cpab(tess_size, "pytorch", "cpu", zero_boundary, "svd")
         self.n_recurrence = n_recurrence
         self.outsize = outsize
         self.N = N
@@ -458,3 +458,24 @@ class BaselineModel(nn.Module):
         y = self.mlp(torch.swapaxes(x_input, 2, 1)).mean(dim=1)
         return y, x_dat, x_ref
         # return y, None, None
+
+
+# %%
+
+class CustomModelNoAlign(nn.Module):
+    def __init__(
+        self,
+        params_classification,
+    ):
+
+        super(CustomModelNoAlign, self).__init__()
+
+        self.fcn = FCNBaseline(**params_classification)
+
+    def forward(self, x_dat, x_ref):
+        # AVERAGE XREF
+        x_ref_avg = torch.mean(x_ref, dim=1)
+        x_input = torch.cat([x_dat, x_ref_avg], dim=2)
+        y = self.fcn(torch.swapaxes(x_input, 2, 1))
+        return y, None, None
+        return y, x_dat, x_ref

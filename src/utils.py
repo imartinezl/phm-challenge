@@ -19,8 +19,8 @@ def now():
 
 def get_path(args):
     if args.path is None:
-        return os.path.join(args.folder, str(now()))
-    return os.path.join(args.folder, args.path)
+        return os.path.join(args.dir, str(now()))
+    return os.path.join(args.dir, args.path)
 
 
 def mkdir(path):
