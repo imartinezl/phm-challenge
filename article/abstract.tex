@@ -1,3 +1,49 @@
 \begin{abstract}
 
+The mining industry has been exploring the benefits of automation and remote operation, which can enhance safety by minimizing human presence near machines and hazardous work areas. One promising application of such automation is the use of time series classification methods for failure detection in the hydraulics sector within the mining industry. In this article, we address the problem of fault classification in hydraulic rock drills through the analysis of pressure sensor data. These machines operate under severe performance demands in harsh environments, which generate vibrations and moisture that affect the behavior of the pressure signals.
+The oscillations resulting from pressure propagation at high frequencies can lead to external changes that are not faults, such as changes in hose lengths, significantly altering the pressure signals' dynamics. Such complexities produce time series data that are not directly comparable, rendering current time series classification methods incapable of accurately classifying the data. Therefore, to be effective, consistent alignment of the time series data is crucial.
+This paper presents a state-of-the-art model that integrates innovative time series alignment methods and the latest advances in deep learning to simultaneously align and classify faulty signals. 
+The proposed model is designed to account for the temporal variability and individual differences in the data. The alignment module includes a localization network, a continuous piecewise-affine basis generator, an ODE solver, and a sampler.
+Experimental results demonstrate that accurate alignment leads to meaningful comparisons, reducing the risk of misinterpretation and misclassification.
+Overall, the proposed model has shown high accuracy in classifying faulty signals and has shown its robustness to variability and complexity in real-world time series data.
 \end{abstract}
+
+
+
+\begin{comment}
+    
+    
+
+Time series classification is a powerful tool that provides valuable insights into patterns and trends in sequential data, and has the potential to significantly improve decision-making and outcomes in many fields. 
+This article focuses on a specific industrial application: the fault classification of hydraulic rock drill pressure data under different configurations and scenarios, which was put forward by the Prognostics and Health Management Society for the 2022 PHM Data Challenge, an international open data competition specialized in industrial data analytics and covers a wide spectrum of real-world industrial problems. 
+
+% The 2022 PHM challenge
+The drive towards automation and remote operation in the mining industry is motivated by the desire to create a safer working environment by reducing human presence near machines and hazardous work areas.
+The application of time series classification methods for fault detection holds significant potential for the hydraulics sector within the mining industry.
+In this article, we address the problem of fault classification for a rock drill application using pressure sensor data as input. 
+% Normally no high resolution measurement data is available from such machines, and especially not in combination with known internal faults. 
+% Any sensor must be robust and reliable, leading to high costs and minimizing the number of sensors is of importance. 
+% For this work, data is measured using a single pressure sensor located on the inlet pressure line where many effects of internal conditions are believed to manifest.
+
+Hydraulic rock drills operate under high performance demands in harsh environments, with vibrations and moisture. 
+% A hydraulic rock drill is a hydro-mechanical device using for generating stress waves in a drill steel. 
+It operates at frequencies where oscillations from pressure propagation is a phenomenon that needs to be taken into account. 
+This causes small external changes that are not faults, such as changes in hose lengths, to significantly alter the behavior of the pressure signals. 
+% To capture such differences, different individuals are tested and included in the data. 
+% To introduce such individual differences typically requires changing a number of parts physically in the test setup. 
+% Furthermore, the measured signal is periodic, and governed by some cyclic phenomenon such as the repeated opening of a valve. 
+% It has strong non-linearities, produced by impacts and sudden valve openings. The fundamental machine frequency is influenced by various disturbances, causing different events to occur at different times during a cycle depending on faults and individual variation such as unit configuration and manufacturing tolerances.
+Such complex temporal dynamics produce time series data that is not directly comparable, making it difficult for time series classification methods to accurately classify the data. In order for these techniques to be effective, time series data must be consistently aligned.
+
+This work proposes a model that combines the latest advances in deep learning with innovative time series alignment methods to create a state-of-the-art model that can simultaneously align and classify faulty signals. 
+
+The proposed model is designed to address the temporal variability and the individual differences present in the data. It uses deep learning techniques to capture the underlying patterns in the time series signals, while simultaneously aligning the signals to reduce the effect of variability.
+% The alignment module is composed of a localization network, a continuous piecewise-affine basis generator, an ODE solver and a sampler. 
+Experiments show that accurate alignment leads to meaningful comparisons, reducing the risk of misinterpretation and misclassification.
+Furthermore, the model has shown high accuracy in classifying faulty signals and has demonstrated its robustness to variability and complexity in real-world time series data.
+% The results also indicate that the reduction in variance seen in the training set is also present in the test and validation sets, indicating the model's ability to learn and generalize the warping functions present in the data to new samples.
+% Time series classification has a wide range of applications and is a valuable tool in the analysis of sequential data. 
+% In conclusion, joining the flexibility of time series alignment methods with the potential of deep learning can improve the performance of time series classification. 
+% The participation in the challenge resulted in a novel solution based on deep learning techniques that achieved an accuracy of 97.80\%.
+
+\end{comment}
